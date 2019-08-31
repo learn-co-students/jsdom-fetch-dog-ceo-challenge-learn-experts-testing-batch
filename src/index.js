@@ -1,9 +1,8 @@
-var breedArray = []
+let breedArray = []
 
 window.onload = () => {
     getDogs()
     getBreeds()
-    displayBreeds()
     onBreedClick()
     onFilterClick()
 }
@@ -38,6 +37,12 @@ function getBreeds() {
       //variable declared in global scope so have access in filter function
       //resetting value didn't work, but pushing did
     });
+    displayBreeds()
+    //was having an issue with how values stored
+    //to array b/c of asynchronosity
+    //the array looked right in functions that were called later like filterBreeds
+    //but looked like object in function displayBreeds that was being loaded asynchronously
+    //by calling it at end of function instead of onload it's not aysnchronous
     });
 
 }
@@ -45,15 +50,13 @@ function getBreeds() {
 function displayBreeds() {
   //extracted this from getBreeds() so can access breeds in other functions w/o reloading html
   let listContainer = document.getElementById("dog-breeds");
-  //debugger;
-  console.log(breedArray)
-  // breedArray.forEach(function(breed){
-  //   let newLi = document.createElement("LI");
-  //   let text = document.createTextNode(breed); //w/o this get: Failed to execute 'appendChild' on 'Node': parameter 1 is not of type 'Node'.
-  //   newLi.setAttribute("id", breed)
-  //   newLi.appendChild(text);
-  //   listContainer.appendChild(newLi)
-  // })
+  breedArray.forEach(function(breed){
+    let newLi = document.createElement("LI");
+    let text = document.createTextNode(breed); //w/o this get: Failed to execute 'appendChild' on 'Node': parameter 1 is not of type 'Node'.
+    newLi.setAttribute("id", breed)
+    newLi.appendChild(text);
+    listContainer.appendChild(newLi)
+  })
 }
 
 function onBreedClick() {
@@ -75,4 +78,13 @@ function onBreedClick() {
   function filterBreeds() {
     let listContainer = document.getElementById("dog-breeds");
     listContainer.innerHTML = ""; //need to reset to empty to load from scratch
+    breedArray.forEach(function(breed){
+      if (breed.startsWith(event.target.value)) {
+        let newLi = document.createElement("LI");
+        let text = document.createTextNode(breed); //w/o this get: Failed to execute 'appendChild' on 'Node': parameter 1 is not of type 'Node'.
+        newLi.setAttribute("id", breed)
+        newLi.appendChild(text);
+        listContainer.appendChild(newLi)
+      }
+    })
   }
